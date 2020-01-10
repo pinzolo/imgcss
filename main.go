@@ -16,6 +16,7 @@ import (
 var dir string
 var file string
 var suffix string
+var prefix string
 var validExts = []string{".png", ".jpg", ".jpeg"}
 
 func main() {
@@ -24,6 +25,7 @@ func main() {
 	flag.StringVar(&dir, "dir", "", "directory")
 	flag.StringVar(&dir, "d", "", "directory")
 	flag.StringVar(&suffix, "suffix", "_image", "suffix")
+	flag.StringVar(&prefix, "prefix", ".", "suffix")
 	flag.Parse()
 
 	err := proc()
@@ -83,7 +85,7 @@ func cssFile(path string, info os.FileInfo) (string, error) {
 	}
 
 	rect := img.Bounds()
-	return fmt.Sprintf(".%s {\n  width: %dpx;\n  height: %dpx;\n}\n", className(info), rect.Dx(), rect.Dy()), nil
+	return fmt.Sprintf("%s {\n  width: %dpx;\n  height: %dpx;\n}\n", className(info), rect.Dx(), rect.Dy()), nil
 }
 
 func isImageFile(fp string) bool {
@@ -104,5 +106,15 @@ func decoder(fp string) func(r io.Reader) (image.Image, error) {
 }
 
 func className(fi os.FileInfo) string {
-	return fi.Name()[0:len(fi.Name())-len(filepath.Ext(fi.Name()))] + suffix
+	name := fi.Name()[0:len(fi.Name())-len(filepath.Ext(fi.Name()))]
+	if strings.HasSuffix(name, suffix) {
+		if strings.HasPrefix(name, prefix) {
+			return name
+		}
+		return prefix + name
+	}
+	if strings.HasPrefix(name, prefix) {
+		return name + suffix
+	}
+	return prefix + name + suffix
 }
