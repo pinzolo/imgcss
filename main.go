@@ -72,14 +72,14 @@ func proc() error {
 	return nil
 }
 
-func cssFile(path string, info os.FileInfo) (string, error) {
-	f, err := os.Open(path)
+func cssFile(fp string, info os.FileInfo) (string, error) {
+	f, err := os.Open(fp)
 	if err != nil {
 		return "", err
 	}
 	defer f.Close()
 
-	img, err := png.Decode(f)
+	img, err := decoder(fp)(f)
 	if err != nil {
 		return "", err
 	}
