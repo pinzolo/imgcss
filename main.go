@@ -25,7 +25,7 @@ func main() {
 	flag.StringVar(&dir, "dir", "", "directory")
 	flag.StringVar(&dir, "d", "", "directory")
 	flag.StringVar(&suffix, "suffix", "_image", "suffix")
-	flag.StringVar(&prefix, "prefix", ".", "suffix")
+	flag.StringVar(&prefix, "prefix", ".", "prefix")
 	flag.Parse()
 
 	err := proc()
